@@ -1,0 +1,42 @@
+#!/bin/bash
+
+#use ./sam2matperl /path/gmr-wt.fasta samdir init
+
+START=$(date +%s)
+#./makebam $file
+#	samtools view -bS $file -t /home/kclabws1/Documents/ngs/index_gmr/gmr-wt.fasta.fai> $file.bam
+
+for i in $2/*fastq
+do
+	file=${i}
+	echo ${i}
+	if [ ! -f $file.s.bam ]
+		then
+		fastq_quality_filter -i $file -o $file.qcd -q 20 -p 50 -Q 33 -v &
+		bowtie2 -p 10 --very-sensitive-local $1 -q $file.qcd -S $file.qcd.sam
+		echo "bam does not exist"
+		samtools view -bS $file.qcd.sam | samtools sort - $file.s
+		samtools index $file.s.bam
+		wait $!
+	fi
+	echo "bamdone"
+	if [ ! -f $file.s.bamggmutmatgg ]
+		then
+		perl bdp_align_gg_5.pl $1 $file.s.bam 2> $file.log
+		wait $!
+		echo $file.s.bamggmutmatgg
+		coverageBed -d -abam $file.s.bam -b $1.bed > $file.cov
+		sed -i 1i" ref\tstart\tend\tbase\tcov " $file.cov	
+		wait $!
+	fi
+	echo "perldone"
+done
+
+
+# /home/kclabws1/MATLAB/bin/matlab -nodisplay -nodesktop -nojvm -nosplash -r "collatergg4('"$2"/"$3"');exit;"
+/home/kclabws1/MATLAB/bin/matlab -nodisplay -nodesktop -nojvm -nosplash -r "collatergg5('"$2"');exit;"
+wait $!	
+
+END=$(date +%s)
+DIFF=$(( $END - $START ))
+echo "It took $DIFF seconds"
