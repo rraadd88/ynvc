@@ -4,8 +4,10 @@ dh=$1
 #dplx
 
 for fh in $dh/dplxd/*qcd.fastq; do
-	echo $i
-	cutadapt -u -12 -o $fh.trimmed.fastq $fh
+	if [ ! -f $fh.trimmed.fastq ]; then
+		echo $i
+		cutadapt -u -12 -o $fh.trimmed.fastq $fh
+	fi
 done
 
 mv $dh/dplxd/*.trimmed.fastq $dh/trimmed

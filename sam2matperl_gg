@@ -34,7 +34,7 @@ done
 
 
 # /home/kclabws1/MATLAB/bin/matlab -nodisplay -nodesktop -nojvm -nosplash -r "collatergg4('"$2"/"$3"');exit;"
-/home/kclabws1/MATLAB/bin/matlab -nodisplay -nodesktop -nojvm -nosplash -r "collatergg5('"$2"');exit;"
+/home/kclabws1/MATLAB/bin/matlab -nodisplay -nodesktop -nojvm -nosplash -r "write_csvs('"$2"');exit;"
 wait $!	
 
 END=$(date +%s)
